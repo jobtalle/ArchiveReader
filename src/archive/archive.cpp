@@ -47,7 +47,7 @@ void Archive::readBody(std::ifstream &in)
 		size_t readIndex = readStringTab(uncompressed);
 
 		for(const entry entry:entries)
-			std::cout << entry.name << std::endl;
+			std::cout << entry.name << " " << entry.size << std::endl;
 	}
 	else
 	{
@@ -67,6 +67,7 @@ size_t Archive::readStringTab(std::vector<char> bytes)
 		while(bytes.data()[index] != '\0')
 			newEntry.name += bytes.data()[index++];
 
+		++index;
 		newEntry.offset = *((uint64_t*)(bytes.data() + index));
 
 		if(entries.size())
@@ -74,10 +75,10 @@ size_t Archive::readStringTab(std::vector<char> bytes)
 		lastOffset = newEntry.offset;
 
 		entries.push_back(newEntry);
-		index += sizeof(uint64_t) + 1;
+		index += sizeof(uint64_t);
 	}
 
-	entries.at(entries.size() - 1).size = *((uint64_t*)(bytes.data() + index));
+	entries.at(entries.size() - 1).size = *((uint64_t*)(bytes.data() + ++index));
 	
-	return index + 5;
+	return index + sizeof(uint64_t);
 }
