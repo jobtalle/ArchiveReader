@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\archive\archive.h" />
+    <ClInclude Include="include\miniz\miniz.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\archive\archive.cpp" />
