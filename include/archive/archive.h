@@ -20,6 +20,7 @@ private:
 	struct entry {
 		std::string name;
 		uint64_t offset;
+		uint64_t size;
 	};
 
 	uint8_t flags;
@@ -27,5 +28,6 @@ private:
 	std::vector<char> payload;
 
 	void readFlags(std::ifstream &in);
-	void readEntries(std::ifstream &in);
+	void readBody(std::ifstream &in);
+	size_t readStringTab(std::vector<char> bytes);
 };
