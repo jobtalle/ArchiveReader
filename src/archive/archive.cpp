@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 Archive::Archive(const std::string path)
 {
@@ -24,6 +25,33 @@ Archive::~Archive()
 
 }
 
+const char *Archive::getFile(const std::string name) const
+{
+	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
+
+	if(match->name.compare(name) != 0)
+		return nullptr;
+
+	if(flags & BATCH)
+	{
+		return (char*)payload.data() + match->offset;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+size_t Archive::getFileSize(const std::string name) const
+{
+	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
+
+	if(match->name.compare(name) != 0)
+		return 0;
+
+	return match->size;
+}
+
 void Archive::readFlags(std::ifstream &in)
 {
 	in.read((char*)&flags, sizeof(flags));
@@ -43,11 +71,10 @@ void Archive::readBody(std::ifstream &in)
 		std::vector<char> uncompressed(uncompressedSize);
 		
 		mz_uncompress((unsigned char*)uncompressed.data(), &uncompressedSize, (unsigned char*)body.data(), (mz_ulong)body.size());
-
-		size_t readIndex = readStringTab(uncompressed);
+		payload = std::vector<char>(uncompressed.begin() + readStringTab(uncompressed), uncompressed.end());
 
 		for(const entry entry:entries)
-			std::cout << entry.name << " " << entry.size << std::endl;
+			std::cout << entry.name << " " << entry.offset << std::endl;
 	}
 	else
 	{

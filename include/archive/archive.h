@@ -11,6 +11,9 @@ public:
 	Archive(const std::string path);
 	~Archive();
 
+	const char *getFile(const std::string name) const;
+	size_t getFileSize(const std::string name) const;
+
 private:
 	enum flags {
 		BATCH = 0x01,
@@ -18,9 +21,21 @@ private:
 	};
 
 	struct entry {
+		entry(){}
+
+		entry(const std::string name)
+		{
+			this->name = name;
+		}
+
 		std::string name;
 		uint64_t offset;
 		uint64_t size;
+
+		bool operator < (const struct entry &entry) const
+		{
+			return name.compare(entry.name) < 0;
+		}
 	};
 
 	uint8_t flags;
