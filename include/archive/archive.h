@@ -11,6 +11,7 @@ public:
 	Archive(const std::string path);
 	~Archive();
 
+	bool exists(const std::string name) const;
 	const char *getFile(const std::string name) const;
 	size_t getFileSize(const std::string name) const;
 
@@ -22,7 +23,6 @@ private:
 
 	struct entry {
 		entry(){}
-
 		entry(const std::string name)
 		{
 			this->name = name;

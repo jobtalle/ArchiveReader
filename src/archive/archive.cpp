@@ -25,6 +25,14 @@ Archive::~Archive()
 
 }
 
+bool Archive::exists(const std::string name) const
+{
+	if(std::lower_bound(entries.begin(), entries.end(), entry(name))->name.compare(name) != 0)
+		return false;
+
+	return true;
+}
+
 const char *Archive::getFile(const std::string name) const
 {
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
@@ -33,9 +41,7 @@ const char *Archive::getFile(const std::string name) const
 		return nullptr;
 
 	if(flags & BATCH)
-	{
-		return (char*)payload.data() + match->offset;
-	}
+		return payload.data() + match->offset;
 	else
 	{
 		return nullptr;
@@ -62,19 +68,13 @@ void Archive::readBody(std::ifstream &in)
 	if(flags & BATCH)
 	{
 		mz_ulong uncompressedSize;
-
-		// Read entire batch size
 		in.read((char*)&uncompressedSize, sizeof(uncompressedSize));
 
-		// Read & uncompress body
 		std::vector<char> body((std::istreambuf_iterator<char>(in)), (std::istreambuf_iterator<char>()));
 		std::vector<char> uncompressed(uncompressedSize);
 		
 		mz_uncompress((unsigned char*)uncompressed.data(), &uncompressedSize, (unsigned char*)body.data(), (mz_ulong)body.size());
 		payload = std::vector<char>(uncompressed.begin() + readStringTab(uncompressed), uncompressed.end());
-
-		for(const entry entry:entries)
-			std::cout << entry.name << " " << entry.offset << std::endl;
 	}
 	else
 	{
@@ -87,11 +87,11 @@ size_t Archive::readStringTab(std::vector<char> bytes)
 	size_t index = 0;
 	uint64_t lastOffset = 0;
 
-	while(bytes.data()[index] != '\0')
+	while(bytes.data()[index])
 	{
 		entry newEntry;
 
-		while(bytes.data()[index] != '\0')
+		while(bytes.data()[index])
 			newEntry.name += bytes.data()[index++];
 
 		++index;
@@ -100,7 +100,7 @@ size_t Archive::readStringTab(std::vector<char> bytes)
 		if(entries.size())
 			entries.at(entries.size() - 1).size = newEntry.offset - lastOffset;
 		lastOffset = newEntry.offset;
-
+		
 		entries.push_back(newEntry);
 		index += sizeof(uint64_t);
 	}
