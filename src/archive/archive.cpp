@@ -55,7 +55,7 @@ size_t Archive::getFileSize(const std::string name) const
 	if(match->name.compare(name) != 0)
 		return 0;
 
-	return match->size;
+	return (size_t)match->size;
 }
 
 void Archive::readFlags(std::ifstream &in)
