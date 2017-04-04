@@ -5,6 +5,22 @@
 #include <cstdint>
 #include <fstream>
 
+class ArchiveFile {
+public:
+	const char *bytes;
+
+	ArchiveFile(const uint8_t flags, const char *bytes);
+	~ArchiveFile();
+
+	enum flags {
+		BATCH = 0x01,
+		INVALID = 0x02
+	};
+
+private:
+	uint8_t flags;
+};
+
 class Archive
 {
 public:
@@ -12,7 +28,7 @@ public:
 	~Archive();
 
 	bool exists(const std::string name) const;
-	const char *getFile(const std::string name) const;
+	ArchiveFile getFile(const std::string name) const;
 	size_t getFileSize(const std::string name) const;
 
 private:

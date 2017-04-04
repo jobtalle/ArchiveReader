@@ -2,8 +2,22 @@
 #include <miniz/miniz.h>
 
 #include <stdexcept>
-#include <iostream>
+#include <iostream> // TODO: remove
 #include <algorithm>
+
+ArchiveFile::ArchiveFile(const uint8_t flags, const char *bytes)
+:flags(flags), bytes(bytes)
+{
+
+}
+
+ArchiveFile::~ArchiveFile()
+{
+	if(!(flags & BATCH))
+		delete bytes;
+
+	std::cout << "Destruct file\n";
+}
 
 Archive::Archive(const std::string path)
 {
@@ -33,18 +47,18 @@ bool Archive::exists(const std::string name) const
 	return true;
 }
 
-const char *Archive::getFile(const std::string name) const
+ArchiveFile Archive::getFile(const std::string name) const
 {
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
 
 	if(match->name.compare(name) != 0)
-		return nullptr;
+		return ArchiveFile(ArchiveFile::INVALID, nullptr);
 
 	if(flags & BATCH)
-		return payload.data() + match->offset;
+		return ArchiveFile(ArchiveFile::BATCH, payload.data() + match->offset);
 	else
 	{
-		return nullptr;
+		return ArchiveFile(ArchiveFile::INVALID, nullptr);
 	}
 }
 
