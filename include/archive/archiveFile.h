@@ -12,5 +12,5 @@ public:
 	virtual const char *getBytes() const;
 
 private:
-	const std::string name;
+	std::string name;
 };

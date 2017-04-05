@@ -1,12 +1,12 @@
-#include <archive/archive.h>
-#include <archive/archiveFileStatic.h>
-#include <archive/archiveFileDynamic.h>
-#include <archive/archiveFileInvalid.h>
-#include <miniz/miniz.h>
+#include "archive/archive.h"
+#include "archive/archiveFileStatic.h"
+#include "archive/archiveFileDynamic.h"
+#include "archive/archiveFileInvalid.h"
+#include "miniz/miniz.h"
 
 #include <stdexcept>
-#include <iostream> // TODO: remove
 #include <algorithm>
+#include <iostream>
 
 Archive::Archive(const std::string path)
 :payload(nullptr)
@@ -45,7 +45,9 @@ ArchiveFile Archive::getFile(const std::string name) const
 		return ArchiveFileInvalid();
 
 	if(flags & BATCH)
+	{
 		return ArchiveFileStatic(name, payload, match->offset);
+	}
 	else
 	{
 		return ArchiveFileInvalid();
