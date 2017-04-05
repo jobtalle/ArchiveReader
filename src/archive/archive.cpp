@@ -9,6 +9,7 @@
 #include <algorithm>
 
 Archive::Archive(const std::string path)
+:payload(nullptr)
 {
 	std::ifstream source(path, std::ios::binary);
 
@@ -39,12 +40,12 @@ bool Archive::exists(const std::string name) const
 ArchiveFile Archive::getFile(const std::string name) const
 {
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
-
+	
 	if(match->name.compare(name) != 0)
 		return ArchiveFileInvalid();
 
 	if(flags & BATCH)
-		return ArchiveFileStatic(name, payload.data() + match->offset);
+		return ArchiveFileStatic(name, payload, match->offset);
 	else
 	{
 		return ArchiveFileInvalid();
@@ -77,7 +78,7 @@ void Archive::readBody(std::ifstream &in)
 		std::vector<char> uncompressed(uncompressedSize);
 		
 		mz_uncompress((unsigned char*)uncompressed.data(), &uncompressedSize, (unsigned char*)body.data(), (mz_ulong)body.size());
-		payload = std::vector<char>(uncompressed.begin() + readStringTab(uncompressed), uncompressed.end());
+		payload = std::make_shared<std::vector<char>>(uncompressed.begin() + readStringTab(uncompressed), uncompressed.end());
 	}
 	else
 	{

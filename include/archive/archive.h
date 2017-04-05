@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <fstream>
+#include <memory>
 
 #include "archiveFile.h"
 
@@ -42,7 +43,7 @@ private:
 
 	uint8_t flags;
 	std::vector<entry> entries;
-	std::vector<char> payload;
+	std::shared_ptr<std::vector<char>> payload;
 
 	void readFlags(std::ifstream &in);
 	void readBody(std::ifstream &in);
