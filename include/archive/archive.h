@@ -5,21 +5,7 @@
 #include <cstdint>
 #include <fstream>
 
-class ArchiveFile {
-public:
-	const char *bytes;
-
-	ArchiveFile(const uint8_t flags, const char *bytes);
-	~ArchiveFile();
-
-	enum flags {
-		BATCH = 0x01,
-		INVALID = 0x02
-	};
-
-private:
-	uint8_t flags;
-};
+#include "archiveFile.h"
 
 class Archive
 {

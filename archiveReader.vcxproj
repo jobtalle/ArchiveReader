@@ -127,10 +127,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\archive\archive.h" />
+    <ClInclude Include="include\archive\archiveFile.h" />
+    <ClInclude Include="include\archive\archiveFileDynamic.h" />
+    <ClInclude Include="include\archive\archiveFileInvalid.h" />
+    <ClInclude Include="include\archive\archiveFileStatic.h" />
     <ClInclude Include="include\miniz\miniz.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\archive\archive.cpp" />
+    <ClCompile Include="src\archive\archiveFile.cpp" />
+    <ClCompile Include="src\archive\archiveFileDynamic.cpp" />
+    <ClCompile Include="src\archive\archiveFileInvalid.cpp" />
+    <ClCompile Include="src\archive\archiveFileStatic.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

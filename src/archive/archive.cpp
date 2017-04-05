@@ -1,23 +1,12 @@
 #include <archive/archive.h>
+#include <archive/archiveFileStatic.h>
+#include <archive/archiveFileDynamic.h>
+#include <archive/archiveFileInvalid.h>
 #include <miniz/miniz.h>
 
 #include <stdexcept>
 #include <iostream> // TODO: remove
 #include <algorithm>
-
-ArchiveFile::ArchiveFile(const uint8_t flags, const char *bytes)
-:flags(flags), bytes(bytes)
-{
-
-}
-
-ArchiveFile::~ArchiveFile()
-{
-	if(!(flags & BATCH))
-		delete bytes;
-
-	std::cout << "Destruct file\n";
-}
 
 Archive::Archive(const std::string path)
 {
@@ -52,13 +41,13 @@ ArchiveFile Archive::getFile(const std::string name) const
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
 
 	if(match->name.compare(name) != 0)
-		return ArchiveFile(ArchiveFile::INVALID, nullptr);
+		return ArchiveFileInvalid();
 
 	if(flags & BATCH)
-		return ArchiveFile(ArchiveFile::BATCH, payload.data() + match->offset);
+		return ArchiveFileStatic(name, payload.data() + match->offset);
 	else
 	{
-		return ArchiveFile(ArchiveFile::INVALID, nullptr);
+		return ArchiveFileInvalid();
 	}
 }
 
