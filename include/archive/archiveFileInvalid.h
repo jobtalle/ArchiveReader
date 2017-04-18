@@ -3,6 +3,6 @@
 class ArchiveFileInvalid : public ArchiveFile
 {
 public:
-	bool isValid() const;
-	const char *getBytes() const;
+	bool isValid() const override;
+	const char *getBytes() const override;
 };

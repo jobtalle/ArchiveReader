@@ -15,7 +15,7 @@ public:
 	~Archive();
 
 	bool exists(const std::string name) const;
-	ArchiveFile getFile(const std::string name) const;
+	ArchiveFile *getFile(const std::string name) const;
 	size_t getFileSize(const std::string name) const;
 
 private:

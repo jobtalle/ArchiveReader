@@ -1,7 +1,8 @@
 #include <archive/archiveFileStatic.h>
+#include <iostream>
 
 ArchiveFileStatic::ArchiveFileStatic(const std::string name, const std::shared_ptr<std::vector<char>> &payload, const size_t offset)
-:ArchiveFile(name), payload(payload), offset(offset) {};
+	:ArchiveFile(name), payload(payload), offset(offset) {};
 
 bool ArchiveFileStatic::isValid() const
 {

@@ -1,9 +1,11 @@
 #include <archive/archiveFile.h>
-
+#include <iostream>
 ArchiveFile::ArchiveFile() {}
 
 ArchiveFile::ArchiveFile(const std::string name)
 :name(name) {}
+
+ArchiveFile::~ArchiveFile() {}
 
 std::string ArchiveFile::getName() const
 {

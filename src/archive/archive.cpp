@@ -37,20 +37,20 @@ bool Archive::exists(const std::string name) const
 	return false;
 }
 
-ArchiveFile Archive::getFile(const std::string name) const
+ArchiveFile *Archive::getFile(const std::string name) const
 {
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
 	
 	if(match == entries.end() || match->name.compare(name) != 0)
-		return ArchiveFileInvalid();
+		return new ArchiveFileInvalid();
 
 	if(flags & BATCH)
 	{
-		return ArchiveFileStatic(name, payload, match->offset);
+		return new ArchiveFileStatic(name, payload, match->offset);
 	}
 	else
 	{
-		return ArchiveFileInvalid();
+		return new ArchiveFileInvalid();
 	}
 }
 

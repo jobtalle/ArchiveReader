@@ -6,8 +6,8 @@ class ArchiveFileDynamic : public ArchiveFile
 {
 public:
 	ArchiveFileDynamic(const std::string name, char *bytes);
-	bool isValid() const;
-	const char *getBytes() const;
+	bool isValid() const override;
+	const char *getBytes() const override;
 
 private:
 	std::shared_ptr<char> bytes;
