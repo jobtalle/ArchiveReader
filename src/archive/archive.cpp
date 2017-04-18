@@ -31,17 +31,17 @@ Archive::~Archive()
 
 bool Archive::exists(const std::string name) const
 {
-	if(std::lower_bound(entries.begin(), entries.end(), entry(name))->name.compare(name) != 0)
-		return false;
+	if(entries.size() && std::lower_bound(entries.begin(), entries.end(), entry(name))->name.compare(name) == 0)
+		return true;
 
-	return true;
+	return false;
 }
 
 ArchiveFile Archive::getFile(const std::string name) const
 {
 	auto match = std::lower_bound(entries.begin(), entries.end(), entry(name));
 	
-	if(match->name.compare(name) != 0)
+	if(match == entries.end() || match->name.compare(name) != 0)
 		return ArchiveFileInvalid();
 
 	if(flags & BATCH)
