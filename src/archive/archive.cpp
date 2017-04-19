@@ -6,7 +6,6 @@
 
 #include <stdexcept>
 #include <algorithm>
-#include <iostream>
 
 Archive::Archive(const std::string path)
 :payload(nullptr)
@@ -102,7 +101,7 @@ size_t Archive::readStringTab(std::vector<char> bytes)
 
 		++index;
 		newEntry.offset = *((uint64_t*)(bytes.data() + index));
-
+		
 		if(entries.size())
 			entries.at(entries.size() - 1).size = newEntry.offset - lastOffset;
 		lastOffset = newEntry.offset;
